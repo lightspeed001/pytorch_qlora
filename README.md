@@ -1,7 +1,24 @@
 # pytorch_qlora
-## Fine-Tuning Mistral 7B using QLoRA
+## Fine-Tuning Mistral 7B using QLoRA with the peft, transformers and bitsandbytes libraries.
 
-### Build it :hammer_and_wrench:
+### _Note: This example assumes you're working with a single GPU an A100 or similar_
+
+### Install Prerequisites :pen:
+      
+```python
+      pip install -q bitsandbytes datasets accelerate peft transformers trl
+      
+```
+
+### Key Notes :spiral_notepad:
+
+>      * __Quantization__: Uses 4-bit NF4 quantization with double quantization
+>      * __LORA__: Targets all attebtion projection matrices (q/k/v/o_proj)
+>      * __Training__: Uses paged AdamW optimizer with cosine LR schedule.
+>      * __Dataset__: Uses the Guanaco dataset (a cleaned version of OpenAssistant) for instruction tuning.
+>      * __Memory Efficiency__: The combination of QLoRA and packing allows training on a single GPU.
+
+### Build it Docker :hammer_and_wrench:
 1.  __Build the Docker image__ :
 ```bash
       docker build -t mistral-qlora-fintune .
