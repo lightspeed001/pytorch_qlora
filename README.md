@@ -37,7 +37,7 @@
 * ```--gpus all``` : Gives the container access to all GPUs
 * ```-v $(pwd)/output:/workspace/...``` : Mounts a volume to save the trained model
 
-3.      __For production use, you might want to__ :
+3.  __For production use, you might want to__ 
       
 * Remove ```max_steps``` and set proper ```num_train_epochs```
 * Add proper volume mounnts for datasets
