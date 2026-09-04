@@ -1,0 +1,22 @@
+# Server configuration for k3s
+write-kubeconfig-mode: "0644"
+disable:
+  - traefik  # Use ingress-nginx instead
+  - servicelb  # Use MetalLB or cloud LB
+  - local-storage  # Use Longhorn or other CSI driver
+  - metrics-server  # Install separately for better control
+kube-apiserver-arg:
+  - "service-node-port-range=8000-65535"  # Wider port range for GPU nodes
+  - "enable-admission-plugins=NodeRestriction,LimitRanger,ResourceQuota"
+kube-controller-manager-arg:
+  - "terminated-pod-gc-threshold=10"
+kubelet-arg:
+  - "eviction-hard=memory.available<500Mi"  # More aggressive eviction
+  - "image-gc-high-threshold=85"  # More frequent image GC
+  - "image-gc-low-threshold=75"
+  - "kube-reserved=cpu=500m,memory=1Gi,ephemeral-storage=1Gi"
+  - "system-reserved=cpu=500m,memory=2Gi,ephemeral-storage=1Gi"
+node-ip: "auto"  # Auto-detect node IP
+flannel-backend: "wireguard-native"  # Better performance than vxlan
+disable-network-policy: false  # Enable network policies
+

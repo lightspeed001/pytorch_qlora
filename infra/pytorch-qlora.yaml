@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mistral-data
+spec:
+  storageClassName: longhorn-gpu
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mistral-qlora-finetune
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      nodeSelector:
+        node-role.kubernetes.io/gpu: "true"
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+      containers:
+      - name: finetune
+        image: mistral-qlora-finetune:latest  # Your Docker image
+        command: ["python", "finetune_mistral_qlora.py"]
+        env:
+        - name: NCCL_DEBUG
+          value: "INFO"
+        - name: NCCL_SOCKET_IFNAME
+          value: "eth0"
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+            memory: "40Gi"
+            cpu: "8"
+          requests:
+            nvidia.com/gpu: 1
+            memory: "32Gi"
+            cpu: "6"
+        volumeMounts:
+        - name: data
+          mountPath: /workspace
+      restartPolicy: Never
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: mistral-data
+

@@ -1,0 +1,16 @@
+# Agent configuration for GPU nodes
+server: "https://<k3s-server-ip>:6443"  # Replace with your server IP
+token: "<your-k3s-token>"  # From /var/lib/rancher/k3s/server/node-token
+node-label:
+  - "node-role.kubernetes.io/gpu=true"
+  - "nvidia.com/gpu=true"
+node-taint:
+  - "nvidia.com/gpu=true:NoSchedule"  # Prevent non-GPU workloads
+kubelet-arg:
+  - "eviction-hard=memory.available<1Gi"
+  - "image-gc-high-threshold=90"
+  - "image-gc-low-threshold=80"
+  - "kube-reserved=cpu=1,memory=4Gi,ephemeral-storage=2Gi"
+  - "system-reserved=cpu=1,memory=4Gi,ephemeral-storage=2Gi"
+container-runtime-endpoint: "unix:///run/containerd/containerd.sock"
+

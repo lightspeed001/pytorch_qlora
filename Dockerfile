@@ -32,7 +32,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 WORKDIR /workspace
 
 # Copy the training script
-COPY finetune_mistral_qlora.py .
+COPY posttrain_qlora.py .
 
 # Set entrypoint to run the training script
-ENTRYPOINT ["python", "finetune_mistral_qlora.py"]
+ENTRYPOINT ["python", "posttrain_qlora.py"]

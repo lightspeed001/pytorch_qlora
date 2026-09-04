@@ -1,0 +1,24 @@
+operator:
+  defaultRuntime: containerd
+  deploy:
+    daemonset: true
+    driver: true
+    toolkit: true
+    devicePlugin: true
+    dcgmExporter: true
+    gfd: true
+    migManager: false  # Disable MIG for simplicity
+driver:
+  enabled: true
+  version: "535.86.10"  # Match your driver version
+toolkit:
+  enabled: true
+devicePlugin:
+  enabled: true
+dcgmExporter:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+gfd:
+  enabled: true
+
